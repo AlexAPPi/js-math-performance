@@ -1,0 +1,114 @@
+class Vector3 { constructor(x, y, z) { this.x = x; this.y = y; this.z = z; } }
+class Quaternion { constructor(x, y, z, w) { this.x = x; this.y = y; this.z = z; this.w = w; } }
+
+function random(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function randomVector3() {
+  return new Vector3(random(-1000, 1000), random(-1000, 1000), random(-1000, 1000));
+}
+
+(() => {
+  const fromToRotationV3 = (from, to) => {
+
+      const dotProduct    = from.x * to.x + from.y * to.y + from.z * to.z;
+      const magnitudeFrom = Math.sqrt(from.x ** 2 + from.y ** 2 + from.z ** 2);
+      const magnitudeTo   = Math.sqrt(to.x ** 2 + to.y ** 2 + to.z ** 2);
+  
+      const cosTheta = dotProduct / (magnitudeFrom * magnitudeTo);
+      const angle = Math.acos(Math.max(-1, Math.min(1, cosTheta)));
+      const axisX = from.y * to.z - from.z * to.y;
+      const axisY = from.z * to.x - from.x * to.z;
+      const axisZ = from.x * to.y - from.y * to.x;
+      const magnitudeAxis = Math.sqrt(axisX ** 2 + axisY ** 2 + axisZ ** 2);
+
+      if (magnitudeAxis < 1e-6) {
+          return new Quaternion(0, 0, 0, 1);
+      }
+      
+      const halfAngle = angle / 2;
+      const t = magnitudeAxis / Math.sin(halfAngle);
+  
+      return new Quaternion(
+          axisX / t,
+          axisY / t,
+          axisZ / t,
+          Math.cos(halfAngle)
+      );
+  }
+  
+  fromToRotationV3(randomVector3(), randomVector3());
+})();
+
+(() => {
+  const fromToRotationV3 = (from, to) => {
+
+      const dotProduct    = from.x * to.x + from.y * to.y + from.z * to.z;
+      const magnitudeFrom = Math.sqrt(from.x ** 2 + from.y ** 2 + from.z ** 2);
+      const magnitudeTo   = Math.sqrt(to.x ** 2 + to.y ** 2 + to.z ** 2);
+  
+      const cosTheta = dotProduct / (magnitudeFrom * magnitudeTo);
+      const angle = Math.acos(Math.max(-1, Math.min(1, cosTheta)));
+      const axisX = from.y * to.z - from.z * to.y;
+      const axisY = from.z * to.x - from.x * to.z;
+      const axisZ = from.x * to.y - from.y * to.x;
+      const magnitudeAxis = Math.sqrt(axisX ** 2 + axisY ** 2 + axisZ ** 2);
+
+      if (magnitudeAxis < 1e-6) {
+          return new Quaternion(0, 0, 0, 1);
+      }
+      
+      const halfAngle = angle / 2;
+      const sinHalfAngle = Math.sin(halfAngle);
+  
+      return new Quaternion(
+          axisX / magnitudeAxis * sinHalfAngle,
+          axisY / magnitudeAxis * sinHalfAngle,
+          axisZ / magnitudeAxis * sinHalfAngle,
+          Math.cos(halfAngle)
+      );
+  }
+  
+  fromToRotationV3(randomVector3(), randomVector3());
+})();
+
+(() => {
+  const fromToRotationV3 = (from, to) => {
+
+      const dotProduct    = from.x * to.x + from.y * to.y + from.z * to.z;
+      const magnitudeFrom = Math.sqrt(from.x ** 2 + from.y ** 2 + from.z ** 2);
+      const magnitudeTo   = Math.sqrt(to.x ** 2 + to.y ** 2 + to.z ** 2);
+  
+      const cosTheta = dotProduct / (magnitudeFrom * magnitudeTo);
+      const angle = Math.acos(Math.max(-1, Math.min(1, cosTheta)));
+  
+      const axis = {
+          x: from.y * to.z - from.z * to.y,
+          y: from.z * to.x - from.x * to.z,
+          z: from.x * to.y - from.y * to.x
+      };
+  
+      const magnitudeAxis = Math.sqrt(axis.x ** 2 + axis.y ** 2 + axis.z ** 2);
+
+      if (magnitudeAxis < 1e-6) {
+          return new Quaternion(0, 0, 0, 1);
+      }
+
+      axis.x /= magnitudeAxis;
+      axis.y /= magnitudeAxis;
+      axis.z /= magnitudeAxis;
+  
+      const halfAngle = angle / 2;
+      const sinHalfAngle = Math.sin(halfAngle);
+  
+      return new Quaternion(
+          axis.x * sinHalfAngle,
+          axis.y * sinHalfAngle,
+          axis.z * sinHalfAngle,
+          Math.cos(halfAngle)
+      );
+  }
+  
+  fromToRotationV3(randomVector3(), randomVector3());
+})();
